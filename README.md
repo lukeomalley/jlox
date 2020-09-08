@@ -4,4 +4,4 @@ tree-walking interpreter for the lox programming language
 
 ## Status
 
-[Lexical Errors](https://craftinginterpreters.com/scanning.html#lexical-errors)
+[Parsing Expressions](https://craftinginterpreters.com/parsing-expressions.html)
