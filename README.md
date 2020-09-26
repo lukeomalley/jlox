@@ -1,6 +1,6 @@
 # Jlox
 
-tree-walking interpreter for the lox programming language
+tree-walking interpreter for the lox programming language.
 
 ## Status
 
