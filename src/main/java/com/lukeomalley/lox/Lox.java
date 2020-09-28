@@ -53,6 +53,10 @@ public class Lox {
       System.exit(65);
     }
 
+    for (Token token : tokens) {
+      System.out.println(token);
+    }
+
     System.out.println(new AstPrinter().print(expression));
   }
 
