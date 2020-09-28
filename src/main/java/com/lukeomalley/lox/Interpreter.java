@@ -5,7 +5,7 @@ class Interpreter implements Expr.Visitor<Object> {
   void interpret(Expr expression) {
     try {
       Object value = evaluate(expression);
-      System.out.println(stringify(value));
+      System.out.println("=> " + stringify(value));
     } catch (RuntimeError error) {
       Lox.runtimeError(error);
     }
@@ -93,7 +93,7 @@ class Interpreter implements Expr.Visitor<Object> {
           return (String) left + (String) right;
         }
 
-        throw new RuntimeError(expr.operator, "Operands must be two numbers of two strings.")
+        throw new RuntimeError(expr.operator, "Operands must be two numbers of two strings.");
       default:
         return null;
     }

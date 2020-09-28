@@ -42,7 +42,7 @@ public class Lox {
     BufferedReader reader = new BufferedReader(input);
 
     for (;;) {
-      System.out.println("> ");
+      System.out.print("jlox > ");
       String line = reader.readLine();
       if (line == null) {
         break;
@@ -65,11 +65,11 @@ public class Lox {
 
     interpreter.interpret(expression);
 
-    for (Token token : tokens) {
-      System.out.println(token);
-    }
+    // for (Token token : tokens) {
+    // System.out.println(token);
+    // }
 
-    System.out.println(new AstPrinter().print(expression));
+    // System.out.println(new AstPrinter().print(expression));
   }
 
   static void error(int line, String message) {
