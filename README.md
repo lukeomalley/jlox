@@ -4,4 +4,4 @@ tree-walking interpreter for the lox programming language.
 
 ## Status
 
-[Parsing Expressions](https://craftinginterpreters.com/parsing-expressions.html)
+[Evaluating Expressions](https://craftinginterpreters.com/evaluating-expressions.html#evaluating-expressions)
