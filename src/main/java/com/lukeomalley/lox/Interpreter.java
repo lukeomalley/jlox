@@ -3,6 +3,7 @@ package com.lukeomalley.lox;
 import java.util.List;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+  private Environment environment = new Environment();
 
   void interpret(List<Stmt> statements) {
     try {
@@ -15,21 +16,20 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
   }
 
-  private String stringify(Object object) {
-    if (object == null) {
-      return "nil";
+  @Override
+  public Void visitVarStmt(Stmt.Var stmt) {
+    Object value = null;
+    if (stmt.initializer != null) {
+      value = evaluate(stmt.initializer);
     }
 
-    if (object instanceof Double) {
-      String text = object.toString();
-      if (text.endsWith(".0")) {
-        text = text.substring(0, text.length() - 2);
-      }
+    environment.define(stmt.name.lexeme, value);
+    return null;
+  }
 
-      return text;
-    }
-
-    return object.toString();
+  @Override
+  public Object visitVariableExpr(Expr.Variable expr) {
+    return environment.get(expr.name);
   }
 
   @Override
@@ -163,5 +163,22 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     throw new RuntimeError(operator, "Operators must be numbers.");
 
+  }
+
+  private String stringify(Object object) {
+    if (object == null) {
+      return "nil";
+    }
+
+    if (object instanceof Double) {
+      String text = object.toString();
+      if (text.endsWith(".0")) {
+        text = text.substring(0, text.length() - 2);
+      }
+
+      return text;
+    }
+
+    return object.toString();
   }
 }
