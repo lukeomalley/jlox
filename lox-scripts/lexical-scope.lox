@@ -8,21 +8,21 @@ var c = "global c";
 
   {
     var a = "inner a";
-    print "Inner Block:"
+    print "Inner Block:";
     print a;
     print b;
     print c;
     print " ";
   }
 
-  print "Outer Block:"
+  print "Outer Block:";
   print a;
   print b;
   print c;
   print " ";
 }
 
-print "Global Scope:"
+print "Global Scope:";
 print a;
 print b;
 print c;
