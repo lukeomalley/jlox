@@ -1,1 +1,0 @@
-mvn clean install && java -cp target/jlox-1.0-SNAPSHOT.jar com.lukeomalley.tool.GenerateAst /Users/luke/Documents/jlox/src/main/java/com/lukeomalley/lox/
