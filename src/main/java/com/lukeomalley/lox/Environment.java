@@ -3,8 +3,6 @@ package com.lukeomalley.lox;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.xml.sax.EntityResolver;
-
 public class Environment {
   final Environment enclosing;
   private final Map<String, Object> values = new HashMap<>();
