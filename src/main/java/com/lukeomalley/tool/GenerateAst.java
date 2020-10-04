@@ -23,7 +23,8 @@ public class GenerateAst {
 
     defineAst(outputDir, "Stmt",
         Arrays.asList("Expression : Expr expression", "Print : Expr expression", "Var : Token name, Expr initializer",
-            "Block : List<Stmt> statements", "If : Expr condition, Stmt thenBranch, Stmt elseBranch"));
+            "Block : List<Stmt> statements", "If : Expr condition, Stmt thenBranch, Stmt elseBranch",
+            "While : Expr condition, Stmt body"));
   }
 
   public static void defineAst(String outputDir, String baseName, List<String> types) throws IOException {
