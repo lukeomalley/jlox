@@ -1,12 +1,8 @@
 package com.lukeomalley.lox;
 
-import java.net.http.HttpResponse.BodyHandler;
-import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.lang.model.util.ElementScanner14;
 
 public class Parser {
   private static class ParseError extends RuntimeException {
@@ -208,7 +204,7 @@ public class Parser {
 
   private Stmt expressionStatement() {
     Expr expr = expression();
-    consume(TokenType.SEMICOLON, "Expece, ';' after expression.");
+    consume(TokenType.SEMICOLON, "Expect, ';' after expression.");
     return new Stmt.Expression(expr);
   }
 
@@ -249,9 +245,22 @@ public class Parser {
   }
 
   private Expr multiplication() {
-    Expr expr = unary();
+    Expr expr = modulus();
 
     while (match(TokenType.SLASH, TokenType.STAR)) {
+      Token operator = previous();
+      Expr right = unary();
+      expr = new Expr.Binary(expr, operator, right);
+    }
+
+    return expr;
+  }
+
+  private Expr modulus() {
+
+    Expr expr = unary();
+
+    while (match(TokenType.MOD)) {
       Token operator = previous();
       Expr right = unary();
       expr = new Expr.Binary(expr, operator, right);
