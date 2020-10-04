@@ -1,8 +1,12 @@
 package com.lukeomalley.lox;
 
+import java.net.http.HttpResponse.BodyHandler;
 import java.rmi.server.ExportException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import javax.lang.model.util.ElementScanner14;
 
 public class Parser {
   private static class ParseError extends RuntimeException {
@@ -75,6 +79,14 @@ public class Parser {
       return printStatement();
     }
 
+    if (match(TokenType.WHILE)) {
+      return whileStatement();
+    }
+
+    if (match(TokenType.FOR)) {
+      return forStatement();
+    }
+
     if (match(TokenType.IF)) {
       return ifStatement();
     }
@@ -84,6 +96,59 @@ public class Parser {
     }
 
     return expressionStatement();
+  }
+
+  // For Loop - "Desugaring" into a while loop...
+  private Stmt forStatement() {
+    consume(TokenType.LEFT_PAREN, "Expect '(' after 'for'.");
+
+    Stmt initializer;
+    if (match(TokenType.SEMICOLON)) {
+      initializer = null;
+    } else if (match(TokenType.VAR)) {
+      initializer = varDeclaration();
+    } else {
+      initializer = expressionStatement();
+    }
+
+    Expr condition = null;
+    if (!check(TokenType.SEMICOLON)) {
+      condition = expression();
+    }
+    consume(TokenType.SEMICOLON, "Expect ';' after loop condition.");
+
+    Expr increment = null;
+    if (!check(TokenType.RIGHT_PAREN)) {
+      increment = expression();
+    }
+    consume(TokenType.RIGHT_PAREN, "Expect ')' after for clauses.");
+
+    Stmt body = statement();
+
+    if (increment != null) {
+      body = new Stmt.Block(Arrays.asList(body, new Stmt.Expression(increment)));
+    }
+
+    if (condition == null) {
+      condition = new Expr.Literal(true);
+    }
+    body = new Stmt.While(condition, body);
+
+    if (initializer != null) {
+      body = new Stmt.Block(Arrays.asList(initializer, body));
+    }
+
+    return body;
+  }
+
+  private Stmt whileStatement() {
+    consume(TokenType.LEFT_PAREN, "Expect '(' after 'while'.");
+    Expr condition = expression();
+    consume(TokenType.RIGHT_PAREN, "Expect ')' after condition.");
+
+    Stmt body = statement();
+
+    return new Stmt.While(condition, body);
   }
 
   private Stmt ifStatement() {
