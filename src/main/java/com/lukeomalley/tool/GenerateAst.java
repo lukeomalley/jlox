@@ -26,7 +26,8 @@ public class GenerateAst {
     defineAst(outputDir, "Stmt",
         Arrays.asList("Expression : Expr expression", "Print : Expr expression", "Var : Token name, Expr initializer",
             "Block : List<Stmt> statements", "If : Expr condition, Stmt thenBranch, Stmt elseBranch",
-            "While : Expr condition, Stmt body", "Function   : Token name, List<Token> params," + " List<Stmt> body"));
+            "While : Expr condition, Stmt body", "Function   : Token name, List<Token> params," + " List<Stmt> body",
+            "Return : Token keyword, Expr value"));
   }
 
   public static void defineAst(String outputDir, String baseName, List<String> types) throws IOException {
