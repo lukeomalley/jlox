@@ -1,8 +1,15 @@
 package com.lukeomalley.lox;
 
+import com.lukeomalley.lox.Expr.Call;
+
 public class AstPrinter implements Expr.Visitor<String> {
   String print(Expr expr) {
     return expr.accept(this);
+  }
+
+  @Override
+  public String visitCallExpr(Call expr) {
+    return expr.toString();
   }
 
   @Override
