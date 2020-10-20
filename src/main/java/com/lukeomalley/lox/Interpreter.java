@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lukeomalley.lox.Stmt.Function;
+import com.lukeomalley.lox.Stmt.Return;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   final Environment globals = new Environment();
@@ -38,6 +39,17 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     } catch (RuntimeError error) {
       Lox.runtimeError(error);
     }
+  }
+
+  @Override
+  public Void visitReturnStmt(Stmt.Return stmt) {
+    Object value = null;
+    if (stmt.value != null) {
+      value = evaluate(stmt.value);
+    }
+
+    throw new ReturnValue(value);
+
   }
 
   @Override

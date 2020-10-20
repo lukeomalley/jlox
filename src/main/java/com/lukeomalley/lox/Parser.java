@@ -75,6 +75,10 @@ public class Parser {
       return printStatement();
     }
 
+    if (match(TokenType.RETURN)) {
+      returnStatement();
+    }
+
     if (match(TokenType.WHILE)) {
       return whileStatement();
     }
@@ -92,6 +96,17 @@ public class Parser {
     }
 
     return expressionStatement();
+  }
+
+  private Stmt returnStatement() {
+    Token keyword = previous();
+    Expr value = null;
+    if (!check(TokenType.SEMICOLON)) {
+      value = expression();
+    }
+
+    consume(TokenType.SEMICOLON, "Expect ';' after return value.");
+    return new Stmt.Return(keyword, value);
   }
 
   // For Loop - "Desugaring" into a while loop...
@@ -205,7 +220,6 @@ public class Parser {
     consume(TokenType.LEFT_BRACE, "Expect '{' before " + kind + " body");
     List<Stmt> body = block();
     return new Stmt.Function(name, parameters, body);
-
   }
 
   private Stmt varDeclaration() {
@@ -361,8 +375,8 @@ public class Parser {
       return new Expr.Grouping(expr);
     }
 
+    System.out.println("Couldnt match a primary token: " + this.tokens.get(this.current).toString());
     throw error(peek(), "Expect expression.");
-
   }
 
   private Token consume(TokenType type, String message) {
