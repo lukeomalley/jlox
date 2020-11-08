@@ -1,5 +1,5 @@
 fun sayHi(firstName, lastName) {
-  print "Hi " + firstName + " " + lastName;
+  return "Hi " + firstName + " " + lastName;
 }
 
-sayHi("Luke", "O'Malley");
+print sayHi("Luke", "O'Malley");

@@ -76,7 +76,7 @@ public class Parser {
     }
 
     if (match(TokenType.RETURN)) {
-      returnStatement();
+      return returnStatement();
     }
 
     if (match(TokenType.WHILE)) {
