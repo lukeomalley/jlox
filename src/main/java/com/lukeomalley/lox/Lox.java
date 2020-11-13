@@ -63,13 +63,14 @@ public class Lox {
       return;
     }
 
+    Resolver resolver = new Resolver(interpreter);
+    resolver.resolve(statements);
+
+    if (hadError) {
+      return;
+    }
+
     interpreter.interpret(statements);
-
-    // for (Token token : tokens) {
-    // System.out.println(token);
-    // }
-
-    // System.out.println(new AstPrinter().print(expression));
   }
 
   static void error(int line, String message) {

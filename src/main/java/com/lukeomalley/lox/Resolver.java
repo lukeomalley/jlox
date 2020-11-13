@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.security.auth.login.LoginException;
+
 import com.lukeomalley.lox.Expr.Assign;
 import com.lukeomalley.lox.Expr.Binary;
 import com.lukeomalley.lox.Expr.Call;
@@ -25,9 +27,14 @@ import com.lukeomalley.lox.Stmt.While;
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   private final Interpreter interpreter;
   private final Stack<Map<String, Boolean>> scopes = new Stack<>();
+  private FunctionType currentFunction = FunctionType.NONE;
 
   Resolver(Interpreter interpreter) {
     this.interpreter = interpreter;
+  }
+
+  private enum FunctionType {
+    NONE, FUNCTION
   }
 
   void resolve(List<Stmt> statements) {
@@ -86,11 +93,14 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     declare(stmt.name);
     define(stmt.name);
 
-    resolveFunction(stmt);
+    resolveFunction(stmt, FunctionType.FUNCTION);
     return null;
   }
 
-  private void resolveFunction(Function function) {
+  private void resolveFunction(Function function, FunctionType type) {
+    FunctionType enclosingFunction = currentFunction;
+    currentFunction = type;
+
     beginScope();
 
     for (Token param : function.params) {
@@ -100,6 +110,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     resolve(function.body);
 
     endScope();
+
+    currentFunction = enclosingFunction;
   }
 
   @Override
@@ -128,6 +140,10 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
   @Override
   public Void visitReturnStmt(Return stmt) {
+    if (currentFunction == FunctionType.NONE) {
+      Lox.error(stmt.keyword, "Can't return from top-level code.");
+    }
+
     if (stmt.value != null) {
       resolve(stmt.value);
     }
@@ -200,6 +216,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     Map<String, Boolean> scope = scopes.peek();
+    if (scope.containsKey(name.lexeme)) {
+      Lox.error(name, "Already variable with this name in this scope.");
+    }
 
     scope.put(name.lexeme, false);
   }
