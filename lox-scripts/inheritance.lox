@@ -1,0 +1,17 @@
+class Shape {
+  rotate(degrees) {
+    print "Rotating";
+    print degrees;
+    print "degrees";
+  }
+
+}
+
+class Square < Shape {}
+
+
+
+
+var s = Square();
+
+s.rotate(180);
