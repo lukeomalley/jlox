@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import javax.security.auth.login.LoginException;
-
 import com.lukeomalley.lox.Expr.Assign;
 import com.lukeomalley.lox.Expr.Binary;
 import com.lukeomalley.lox.Expr.Call;
@@ -16,6 +14,7 @@ import com.lukeomalley.lox.Expr.Logical;
 import com.lukeomalley.lox.Expr.Unary;
 import com.lukeomalley.lox.Expr.Variable;
 import com.lukeomalley.lox.Stmt.Block;
+import com.lukeomalley.lox.Stmt.Class;
 import com.lukeomalley.lox.Stmt.Expression;
 import com.lukeomalley.lox.Stmt.Function;
 import com.lukeomalley.lox.Stmt.If;
@@ -197,6 +196,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   @Override
   public Void visitUnaryExpr(Unary expr) {
     resolve(expr.right);
+    return null;
+  }
+
+  @Override
+  public Void visitClassStmt(Class stmt) {
+    declare(stmt.name);
+    define(stmt.name);
     return null;
   }
 
