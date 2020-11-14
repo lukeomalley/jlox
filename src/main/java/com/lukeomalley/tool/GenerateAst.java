@@ -5,10 +5,6 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
-// Build the AST
-// mvn clean insatll
-// java -cp target/jlox-1.0-SNAPSHOT.jar com.lukeomalley.tool.GenerateAst /Users/luke/Documents/jlox/src/main/java/com/lukeomalley/lox/
-
 public class GenerateAst {
   public static void main(String[] args) throws IOException {
     if (args.length != 1) {
@@ -21,7 +17,8 @@ public class GenerateAst {
         Arrays.asList("Binary : Expr left, Token operator, Expr right", "Grouping : Expr expression",
             "Literal : Object value", "Unary : Token operator, Expr right",
             "Call : Expr callee, Token paren, List<Expr> arguments", "Logical : Expr left, Token operator, Expr right",
-            "Variable : Token name", "Assign : Token name, Expr value"));
+            "Variable : Token name", "Assign : Token name, Expr value", "Get : Expr object, Token name",
+            "Set : Expr object, Token name, Expr value", "This : Token keyword"));
 
     defineAst(outputDir, "Stmt",
         Arrays.asList("Expression : Expr expression", "Print : Expr expression", "Var : Token name, Expr initializer",

@@ -8,9 +8,12 @@ import java.util.Stack;
 import com.lukeomalley.lox.Expr.Assign;
 import com.lukeomalley.lox.Expr.Binary;
 import com.lukeomalley.lox.Expr.Call;
+import com.lukeomalley.lox.Expr.Get;
 import com.lukeomalley.lox.Expr.Grouping;
 import com.lukeomalley.lox.Expr.Literal;
 import com.lukeomalley.lox.Expr.Logical;
+import com.lukeomalley.lox.Expr.Set;
+import com.lukeomalley.lox.Expr.This;
 import com.lukeomalley.lox.Expr.Unary;
 import com.lukeomalley.lox.Expr.Variable;
 import com.lukeomalley.lox.Stmt.Block;
@@ -33,7 +36,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   }
 
   private enum FunctionType {
-    NONE, FUNCTION
+    NONE, FUNCTION, METHOD
   }
 
   void resolve(List<Stmt> statements) {
@@ -203,6 +206,36 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   public Void visitClassStmt(Class stmt) {
     declare(stmt.name);
     define(stmt.name);
+
+    beginScope();
+    scopes.peek().put("this", true);
+
+    for (Stmt.Function method : stmt.methods) {
+      FunctionType declaration = FunctionType.METHOD;
+      resolveFunction(method, declaration);
+    }
+
+    endScope();
+
+    return null;
+  }
+
+  @Override
+  public Void visitGetExpr(Get expr) {
+    resolve(expr.object);
+    return null;
+  }
+
+  @Override
+  public Void visitSetExpr(Set expr) {
+    resolve(expr.value);
+    resolve(expr.object);
+    return null;
+  }
+
+  @Override
+  public Void visitThisExpr(This expr) {
+    resolveLocal(expr, expr.keyword);
     return null;
   }
 
