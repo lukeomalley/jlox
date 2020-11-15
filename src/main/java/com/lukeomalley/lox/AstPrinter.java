@@ -3,6 +3,7 @@ package com.lukeomalley.lox;
 import com.lukeomalley.lox.Expr.Call;
 import com.lukeomalley.lox.Expr.Get;
 import com.lukeomalley.lox.Expr.Set;
+import com.lukeomalley.lox.Expr.Super;
 import com.lukeomalley.lox.Expr.This;
 
 public class AstPrinter implements Expr.Visitor<String> {
@@ -13,6 +14,11 @@ public class AstPrinter implements Expr.Visitor<String> {
   @Override
   public String visitCallExpr(Call expr) {
     return expr.toString();
+  }
+
+  @Override
+  public String visitSuperExpr(Super expr) {
+    return "super";
   }
 
   @Override

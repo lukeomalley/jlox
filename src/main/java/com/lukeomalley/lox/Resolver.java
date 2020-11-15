@@ -13,6 +13,7 @@ import com.lukeomalley.lox.Expr.Grouping;
 import com.lukeomalley.lox.Expr.Literal;
 import com.lukeomalley.lox.Expr.Logical;
 import com.lukeomalley.lox.Expr.Set;
+import com.lukeomalley.lox.Expr.Super;
 import com.lukeomalley.lox.Expr.This;
 import com.lukeomalley.lox.Expr.Unary;
 import com.lukeomalley.lox.Expr.Variable;
@@ -225,6 +226,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     if (stmt.superclass != null) {
       resolve(stmt.superclass);
+      beginScope();
+      scopes.peek().put("super", true);
     }
 
     beginScope();
@@ -240,7 +243,17 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     endScope();
+    if (stmt.superclass != null) {
+      endScope();
+    }
+
     currentClass = enclosingClass;
+    return null;
+  }
+
+  @Override
+  public Void visitSuperExpr(Super expr) {
+    resolveLocal(expr, expr.keyword);
     return null;
   }
 
