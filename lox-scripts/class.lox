@@ -11,4 +11,4 @@ class Cake {
 }
 
 var cake = Cake("German chocolate");
-cake.taste(); // Prints "The German chocolate cake is delicious!".
+cake.taste(); 
